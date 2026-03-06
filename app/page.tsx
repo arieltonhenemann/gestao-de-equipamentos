@@ -2,6 +2,8 @@ import { getDashboardStats } from '@/app/actions/dashboard';
 import { Users, Laptop, Smartphone, SmartphoneNfc, Activity, CheckCircle2 } from 'lucide-react';
 import DashboardSearch from '@/components/DashboardSearch';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const stats = await getDashboardStats();
 
