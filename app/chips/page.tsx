@@ -1,6 +1,7 @@
 import { getChips, addChip, vincularChipAoFuncionario } from '@/app/actions/chips';
 import { getFuncionarios } from '@/app/actions/funcionarios';
-import { SmartphoneNfc, Phone, Wifi, UserMinus, UserPlus, Filter } from 'lucide-react';
+import { SmartphoneNfc, Columns, Filter } from 'lucide-react';
+import ChipCard from '@/components/ChipCard';
 
 export default async function ChipsPage(props: { searchParams: Promise<{ filter?: string }> }) {
     const searchParams = await props.searchParams;
@@ -85,63 +86,7 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
                     </div>
 
                     {filteredChips?.map((chip) => (
-                        <div key={chip.id} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-
-                            {/* Esquerda: Info Básica */}
-                            <div className="md:col-span-5">
-                                <div className="flex items-center gap-3 mb-1">
-                                    <h3 className="text-lg font-bold text-slate-800">{chip.numero}</h3>
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
-                    ${chip.status === 'Ativo' ? 'bg-emerald-100 text-emerald-700' :
-                                            chip.status === 'Em Uso' ? 'bg-pink-100 text-pink-700' :
-                                                'bg-red-100 text-red-700'}`}>
-                                        {chip.status}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Centro: Specs */}
-                            <div className="md:col-span-3 text-sm text-slate-600 space-y-1">
-                                <div className="flex items-center gap-1.5"><Phone size={14} className="text-slate-400" /> Linha Móvel</div>
-                                <div className="flex items-center gap-1.5"><Wifi size={14} className="text-slate-400" /> {chip.plano}</div>
-                            </div>
-
-                            {/* Direita: Ações de Vínculo */}
-                            <div className="md:col-span-4 flex flex-col justify-center bg-slate-50 p-3 rounded-lg border border-slate-100 h-full">
-                                {chip.status === 'Em Uso' ? (
-                                    <div className="text-sm">
-                                        <p className="text-slate-500 text-xs mb-1">Em posse de:</p>
-                                        <p className="font-semibold text-slate-800 mb-2 truncate" title={chip.funcionarios?.nome}>{chip.funcionarios?.nome}</p>
-                                        <form action={vincularChipAoFuncionario}>
-                                            <input type="hidden" name="chip_id" value={chip.id} />
-                                            <input type="hidden" name="acao" value="desvincular" />
-                                            <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-1.5 rounded-md transition-colors">
-                                                <UserMinus size={14} /> Desvincular do Funcionário
-                                            </button>
-                                        </form>
-                                    </div>
-                                ) : chip.status === 'Ativo' ? (
-                                    <form action={vincularChipAoFuncionario} className="space-y-2">
-                                        <input type="hidden" name="chip_id" value={chip.id} />
-                                        <input type="hidden" name="acao" value="vincular" />
-                                        <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
-                                            <option value="">Vincular a quem?</option>
-                                            {funcionarios?.filter(f => f.status === 'Ativo' && (!f.chips || f.chips.length === 0)).map(f => (
-                                                <option key={f.id} value={f.id}>{f.nome}</option>
-                                            ))}
-                                        </select>
-                                        <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-pink-50 border border-pink-200 text-pink-700 hover:bg-pink-100 px-3 py-1.5 rounded-md transition-colors font-medium">
-                                            <UserPlus size={14} /> Atribuir Chip
-                                        </button>
-                                    </form>
-                                ) : (
-                                    <div className="text-xs text-center text-slate-400 font-medium italic">
-                                        Linha Cancelada.
-                                    </div>
-                                )}
-                            </div>
-
-                        </div>
+                        <ChipCard key={chip.id} chip={chip} funcionarios={funcionarios || []} />
                     ))}
                     {(!filteredChips || filteredChips.length === 0) && (
                         <div className="text-center py-12 bg-white rounded-xl border border-slate-100 text-slate-500">

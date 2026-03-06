@@ -2,6 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
+import { registrarHistorico } from './historico';
 
 export async function getNotebooks() {
   const { data, error } = await supabase
@@ -26,9 +27,19 @@ export async function addNotebook(formData: FormData) {
     serial: formData.get('serial') as string,
   };
 
-  const { error } = await supabase.from('notebooks').insert([obj]);
+  const { data, error } = await supabase.from('notebooks').insert([obj]).select();
 
   if (error) throw new Error(error.message);
+  
+  if (data && data[0]) {
+      await registrarHistorico(
+          data[0].id, 
+          'notebook', 
+          'Cadastro', 
+          `Notebook cadastrado no sistema (${obj.modelo_marca} S/N: ${obj.serial})`
+      );
+  }
+
   revalidatePath('/notebooks');
 }
 
@@ -44,6 +55,8 @@ export async function vincularNotebookAoFuncionario(formData: FormData) {
       .eq('id', notebookId);
     if (error) throw new Error(error.message);
     
+    await registrarHistorico(notebookId, 'notebook', 'Desvinculação', 'Equipamento devolvido / desvinculado do funcionário');
+    
   } else {
     // Verificar se funcionário já tem notebook
     const { data: funcNotebooks } = await supabase
@@ -55,6 +68,9 @@ export async function vincularNotebookAoFuncionario(formData: FormData) {
       throw new Error("Este funcionário já possui um Notebook vinculado.");
     }
 
+    // Buscar nome do funcionario para o historico
+    const { data: funcData } = await supabase.from('funcionarios').select('nome').eq('id', funcionarioId).single();
+
     // Vincular novo
     const { error } = await supabase
       .from('notebooks')
@@ -62,8 +78,39 @@ export async function vincularNotebookAoFuncionario(formData: FormData) {
       .eq('id', notebookId);
       
     if (error) throw new Error(error.message);
+
+    await registrarHistorico(notebookId, 'notebook', 'Vínculo', `Atribuído ao funcionário: ${funcData?.nome || funcionarioId}`);
   }
 
   revalidatePath('/notebooks');
   revalidatePath('/funcionarios');
+}
+
+export async function editarNotebookInfo(id: string, processador: string, memoria: string, hd: string, so: string) {
+  const { error } = await supabase
+    .from('notebooks')
+    .update({ processador, memoria, hd, so })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+
+  await registrarHistorico(id, 'notebook', 'Upgrade/Edição de Hardware', `Componentes atualizados: ${processador}, ${memoria} RAM, ${hd}, ${so}`);
+
+  revalidatePath('/notebooks');
+}
+
+export async function toggleManutencaoNotebook(notebookId: string, currentStatus: string, observacoes: string = "") {
+  const newStatus = currentStatus === 'Em Manutenção' ? 'Disponível' : 'Em Manutenção';
+  
+  const { error } = await supabase
+    .from('notebooks')
+    .update({ status: newStatus })
+    .eq('id', notebookId);
+
+  if (error) throw new Error(error.message);
+
+  const acao = newStatus === 'Em Manutenção' ? 'Enviado para Manutenção' : 'Retornou da Manutenção';
+  await registrarHistorico(notebookId, 'notebook', acao, observacoes || 'Sem observações detalhadas.');
+
+  revalidatePath('/notebooks');
 }

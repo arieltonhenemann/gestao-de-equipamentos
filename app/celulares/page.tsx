@@ -1,6 +1,7 @@
-import { getCelulares, addCelular, vincularCelularAoFuncionario } from '@/app/actions/celulares';
+import { getCelulares, addCelular } from '@/app/actions/celulares';
 import { getFuncionarios } from '@/app/actions/funcionarios';
-import { Smartphone, Cpu, HardDrive, Columns, UserMinus, UserPlus, Filter } from 'lucide-react';
+import { Smartphone, Columns, Filter } from 'lucide-react';
+import CelularCard from '@/components/CelularCard';
 
 export default async function CelularesPage(props: { searchParams: Promise<{ filter?: string }> }) {
     const searchParams = await props.searchParams;
@@ -92,67 +93,17 @@ export default async function CelularesPage(props: { searchParams: Promise<{ fil
                             >
                                 Em Uso
                             </a>
+                            <a
+                                href="/celulares?filter=Em Manutenção"
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Em Manutenção' ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                Manutenção
+                            </a>
                         </div>
                     </div>
 
                     {filteredCelulares?.map((cel) => (
-                        <div key={cel.id} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-
-                            {/* Esquerda: Info Básica */}
-                            <div className="md:col-span-5">
-                                <div className="flex items-center gap-3 mb-1">
-                                    <h3 className="text-lg font-bold text-slate-800">{cel.modelo_marca}</h3>
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
-                    ${cel.status === 'Disponível' ? 'bg-emerald-100 text-emerald-700' :
-                                            cel.status === 'Em Uso' ? 'bg-purple-100 text-purple-700' :
-                                                'bg-orange-100 text-orange-700'}`}>
-                                        {cel.status}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                                    <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-xs text-slate-600">IMEI: {cel.serial}</span>
-                                </div>
-                            </div>
-
-                            {/* Centro: Specs */}
-                            <div className="md:col-span-3 text-sm text-slate-600 space-y-1">
-                                <div className="flex items-center gap-1.5"><Cpu size={14} className="text-slate-400" /> {cel.processador}</div>
-                                <div className="flex items-center gap-1.5"><HardDrive size={14} className="text-slate-400" /> {cel.memoria} RAM • {cel.armazenamento}</div>
-                                <div className="flex items-center gap-1.5"><Columns size={14} className="text-slate-400" /> {cel.tela}</div>
-                            </div>
-
-                            {/* Direita: Ações de Vínculo */}
-                            <div className="md:col-span-4 flex flex-col justify-center bg-slate-50 p-3 rounded-lg border border-slate-100 h-full">
-                                {cel.status === 'Em Uso' ? (
-                                    <div className="text-sm">
-                                        <p className="text-slate-500 text-xs mb-1">Em posse de:</p>
-                                        <p className="font-semibold text-slate-800 mb-2 truncate" title={cel.funcionarios?.nome}>{cel.funcionarios?.nome}</p>
-                                        <form action={vincularCelularAoFuncionario}>
-                                            <input type="hidden" name="celular_id" value={cel.id} />
-                                            <input type="hidden" name="acao" value="desvincular" />
-                                            <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-1.5 rounded-md transition-colors">
-                                                <UserMinus size={14} /> Desvincular
-                                            </button>
-                                        </form>
-                                    </div>
-                                ) : (
-                                    <form action={vincularCelularAoFuncionario} className="space-y-2">
-                                        <input type="hidden" name="celular_id" value={cel.id} />
-                                        <input type="hidden" name="acao" value="vincular" />
-                                        <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                                            <option value="">Selecionar Funcionário...</option>
-                                            {funcionarios?.filter(f => f.status === 'Ativo' && (!f.celulares || f.celulares.length === 0)).map(f => (
-                                                <option key={f.id} value={f.id}>{f.nome}</option>
-                                            ))}
-                                        </select>
-                                        <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-purple-50 border border-purple-200 text-purple-700 hover:bg-purple-100 px-3 py-1.5 rounded-md transition-colors font-medium">
-                                            <UserPlus size={14} /> Atribuir
-                                        </button>
-                                    </form>
-                                )}
-                            </div>
-
-                        </div>
+                        <CelularCard key={cel.id} cel={cel} funcionarios={funcionarios || []} />
                     ))}
                     {(!filteredCelulares || filteredCelulares.length === 0) && (
                         <div className="text-center py-12 bg-white rounded-xl border border-slate-100 text-slate-500">

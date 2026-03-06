@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutDashboard, Users, Laptop, Smartphone, SmartphoneNfc } from 'lucide-react';
+import { LayoutDashboard, Users, Laptop, Smartphone, SmartphoneNfc, History } from 'lucide-react';
 
 export default function Sidebar() {
     const menuItems = [
@@ -8,6 +8,7 @@ export default function Sidebar() {
         { name: 'Notebooks', href: '/notebooks', icon: Laptop },
         { name: 'Celulares', href: '/celulares', icon: Smartphone },
         { name: 'Chips', href: '/chips', icon: SmartphoneNfc },
+        { name: 'Histórico', href: '/historico', icon: History },
     ];
 
     return (

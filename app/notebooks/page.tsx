@@ -1,6 +1,7 @@
-import { getNotebooks, addNotebook, vincularNotebookAoFuncionario } from '@/app/actions/notebooks';
+import { getNotebooks, addNotebook } from '@/app/actions/notebooks';
 import { getFuncionarios } from '@/app/actions/funcionarios';
-import { Laptop, Cpu, HardDrive, ShieldCheck, UserMinus, UserPlus, Filter } from 'lucide-react';
+import { Laptop, Filter } from 'lucide-react';
+import NotebookCard from '@/components/NotebookCard';
 
 export default async function NotebooksPage(props: { searchParams: Promise<{ filter?: string }> }) {
     const searchParams = await props.searchParams;
@@ -92,67 +93,17 @@ export default async function NotebooksPage(props: { searchParams: Promise<{ fil
                             >
                                 Em Uso
                             </a>
+                            <a
+                                href="/notebooks?filter=Em Manutenção"
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Em Manutenção' ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                Manutenção
+                            </a>
                         </div>
                     </div>
 
                     {filteredNotebooks?.map((note) => (
-                        <div key={note.id} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-
-                            {/* Esquerda: Info Básica */}
-                            <div className="md:col-span-5">
-                                <div className="flex items-center gap-3 mb-1">
-                                    <h3 className="text-lg font-bold text-slate-800">{note.modelo_marca}</h3>
-                                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
-                    ${note.status === 'Disponível' ? 'bg-emerald-100 text-emerald-700' :
-                                            note.status === 'Em Uso' ? 'bg-blue-100 text-blue-700' :
-                                                'bg-orange-100 text-orange-700'}`}>
-                                        {note.status}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                                    <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-xs text-slate-600">S/N: {note.serial}</span>
-                                </div>
-                            </div>
-
-                            {/* Centro: Specs */}
-                            <div className="md:col-span-3 text-sm text-slate-600 space-y-1">
-                                <div className="flex items-center gap-1.5"><Cpu size={14} className="text-slate-400" /> {note.processador}</div>
-                                <div className="flex items-center gap-1.5"><HardDrive size={14} className="text-slate-400" /> {note.memoria} RAM • {note.hd}</div>
-                                <div className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-slate-400" /> {note.so}</div>
-                            </div>
-
-                            {/* Direita: Ações de Vínculo */}
-                            <div className="md:col-span-4 flex flex-col justify-center bg-slate-50 p-3 rounded-lg border border-slate-100 h-full">
-                                {note.status === 'Em Uso' ? (
-                                    <div className="text-sm">
-                                        <p className="text-slate-500 text-xs mb-1">Em posse de:</p>
-                                        <p className="font-semibold text-slate-800 mb-2 truncate" title={note.funcionarios?.nome}>{note.funcionarios?.nome}</p>
-                                        <form action={vincularNotebookAoFuncionario}>
-                                            <input type="hidden" name="notebook_id" value={note.id} />
-                                            <input type="hidden" name="acao" value="desvincular" />
-                                            <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-3 py-1.5 rounded-md transition-colors">
-                                                <UserMinus size={14} /> Desvincular
-                                            </button>
-                                        </form>
-                                    </div>
-                                ) : (
-                                    <form action={vincularNotebookAoFuncionario} className="space-y-2">
-                                        <input type="hidden" name="notebook_id" value={note.id} />
-                                        <input type="hidden" name="acao" value="vincular" />
-                                        <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                                            <option value="">Selecionar Funcionário...</option>
-                                            {funcionarios?.filter(f => f.status === 'Ativo' && (!f.notebooks || f.notebooks.length === 0)).map(f => (
-                                                <option key={f.id} value={f.id}>{f.nome}</option>
-                                            ))}
-                                        </select>
-                                        <button type="submit" className="w-full flex items-center justify-center gap-1.5 text-xs bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 px-3 py-1.5 rounded-md transition-colors font-medium">
-                                            <UserPlus size={14} /> Atribuir
-                                        </button>
-                                    </form>
-                                )}
-                            </div>
-
-                        </div>
+                        <NotebookCard key={note.id} note={note} funcionarios={funcionarios} />
                     ))}
                     {(!filteredNotebooks || filteredNotebooks.length === 0) && (
                         <div className="text-center py-12 bg-white rounded-xl border border-slate-100 text-slate-500">
