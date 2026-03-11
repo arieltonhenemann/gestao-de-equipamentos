@@ -2,19 +2,31 @@ import { getCelulares, addCelular } from '@/app/actions/celulares';
 import { getFuncionarios } from '@/app/actions/funcionarios';
 import { Smartphone, Columns, Filter } from 'lucide-react';
 import CelularCard from '@/components/CelularCard';
+import LocalSearch from '@/components/LocalSearch';
 
-export default async function CelularesPage(props: { searchParams: Promise<{ filter?: string }> }) {
+export default async function CelularesPage(props: { searchParams: Promise<{ filter?: string, q?: string }> }) {
     const searchParams = await props.searchParams;
     const celulares = await getCelulares();
     const funcionarios = await getFuncionarios();
 
     const currentFilter = searchParams?.filter || 'Todos';
-    const filteredCelulares = currentFilter === 'Todos' ? celulares : celulares?.filter(c => c.status === currentFilter);
+    const q = searchParams?.q?.toLowerCase() || '';
+
+    const filteredCelulares = celulares?.filter(c => {
+        const matchesStatus = currentFilter === 'Todos' || c.status === currentFilter;
+        const matchesQuery = q ? (
+            c.modelo_marca?.toLowerCase().includes(q) ||
+            c.serial?.toLowerCase().includes(q) ||
+            c.armazenamento?.toLowerCase().includes(q)
+        ) : true;
+        return matchesStatus && matchesQuery;
+    });
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-3xl font-bold text-slate-800">Celulares</h1>
+                <LocalSearch placeholder="Buscar celular por modelo, serial ou IMEI..." />
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from 'react';
-import { UserMinus, UserPlus, Laptop, Smartphone, SmartphoneNfc, ShieldAlert, RotateCcw, Edit2, Check, X } from 'lucide-react';
+import { UserMinus, UserPlus, Laptop, Smartphone, SmartphoneNfc, ShieldAlert, RotateCcw, Edit2, Check, X, Printer } from 'lucide-react';
 import { inativarFuncionario, reativarFuncionario, editarFuncionarioInfo } from '@/app/actions/funcionarios';
+import TermoModal from './TermoModal';
 
 interface Funcionario {
     id: string;
@@ -21,6 +22,7 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
     const [nomeEditado, setNomeEditado] = useState(func.nome);
     const [setorEditado, setSetorEditado] = useState(func.setor);
     const [loading, setLoading] = useState(false);
+    const [isTermoModalOpen, setIsTermoModalOpen] = useState(false);
 
     const handleSalvar = async () => {
         if (!nomeEditado.trim() || !setorEditado.trim() || (nomeEditado === func.nome && setorEditado === func.setor)) {
@@ -146,7 +148,16 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
             </div>
 
             {/* Ações Laterais */}
-            <div className="flex items-start sm:justify-end">
+            <div className="flex flex-col sm:flex-row items-end sm:items-start justify-end gap-2">
+                <button 
+                    onClick={() => setIsTermoModalOpen(true)}
+                    className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                    title="Gerar termo de responsabilidade"
+                >
+                    <Printer size={16} />
+                    Gerar Termo
+                </button>
+
                 {func.status === 'Ativo' ? (
                     <form action={async () => {
                         await inativarFuncionario(func.id);
@@ -166,6 +177,15 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                         </button>
                     </form>
                 )}
+            </div>
+
+            {/* Modal do Termo */}
+            <div className={isTermoModalOpen ? 'print:visible' : ''}>
+                <TermoModal 
+                    func={func}
+                    isOpen={isTermoModalOpen}
+                    onClose={() => setIsTermoModalOpen(false)}
+                />
             </div>
         </div>
     );

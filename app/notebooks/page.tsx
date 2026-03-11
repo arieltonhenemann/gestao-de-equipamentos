@@ -2,19 +2,31 @@ import { getNotebooks, addNotebook } from '@/app/actions/notebooks';
 import { getFuncionarios } from '@/app/actions/funcionarios';
 import { Laptop, Filter } from 'lucide-react';
 import NotebookCard from '@/components/NotebookCard';
+import LocalSearch from '@/components/LocalSearch';
 
-export default async function NotebooksPage(props: { searchParams: Promise<{ filter?: string }> }) {
+export default async function NotebooksPage(props: { searchParams: Promise<{ filter?: string, q?: string }> }) {
     const searchParams = await props.searchParams;
     const notebooks = await getNotebooks();
     const funcionarios = await getFuncionarios(); // Para o select de vincular
 
     const currentFilter = searchParams?.filter || 'Todos';
-    const filteredNotebooks = currentFilter === 'Todos' ? notebooks : notebooks?.filter(n => n.status === currentFilter);
+    const q = searchParams?.q?.toLowerCase() || '';
+
+    const filteredNotebooks = notebooks?.filter(n => {
+        const matchesStatus = currentFilter === 'Todos' || n.status === currentFilter;
+        const matchesQuery = q ? (
+            n.modelo_marca?.toLowerCase().includes(q) ||
+            n.serial?.toLowerCase().includes(q) ||
+            n.processador?.toLowerCase().includes(q)
+        ) : true;
+        return matchesStatus && matchesQuery;
+    });
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-3xl font-bold text-slate-800">Notebooks</h1>
+                <LocalSearch placeholder="Buscar notebook por modelo, serial..." />
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

@@ -8,8 +8,8 @@ export async function getFuncionarios() {
     .from('funcionarios')
     .select(`
       *,
-      notebooks (id, modelo_marca, serial),
-      celulares (id, modelo_marca, serial),
+      notebooks (id, modelo_marca, serial, processador, memoria, hd, so),
+      celulares (id, modelo_marca, serial, armazenamento, memoria, tela, processador),
       chips (id, numero, plano)
     `)
     .order('created_at', { ascending: false });

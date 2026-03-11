@@ -1,20 +1,31 @@
 import { getFuncionarios, addFuncionario } from '@/app/actions/funcionarios';
 import { UserPlus, Filter } from 'lucide-react';
 import FuncionarioCard from '@/components/FuncionarioCard';
+import LocalSearch from '@/components/LocalSearch';
 import Link from 'next/link';
 
-export default async function FuncionariosPage(props: { searchParams: Promise<{ filter?: string }> }) {
+export default async function FuncionariosPage(props: { searchParams: Promise<{ filter?: string, q?: string }> }) {
     const searchParams = await props.searchParams;
     const funcionarios = await getFuncionarios();
     const currentFilter = searchParams?.filter || 'Ativo';
+    const q = searchParams?.q?.toLowerCase() || '';
 
-    // Filtra no servidor antes de renderizar (Ativos por default)
-    const filteredFuncionarios = funcionarios?.filter(f => f.status === currentFilter);
+    // Filtra no servidor antes de renderizar
+    const filteredFuncionarios = funcionarios?.filter(f => {
+        const matchesStatus = f.status === currentFilter;
+        const matchesQuery = q ? (
+            f.nome?.toLowerCase().includes(q) || 
+            f.cpf?.toLowerCase().includes(q) || 
+            f.setor?.toLowerCase().includes(q)
+        ) : true;
+        return matchesStatus && matchesQuery;
+    });
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-3xl font-bold text-slate-800">Funcionários</h1>
+                <LocalSearch placeholder="Buscar por funcionário, CPF ou setor..." />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

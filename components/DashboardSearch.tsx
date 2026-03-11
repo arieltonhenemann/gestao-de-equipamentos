@@ -74,7 +74,7 @@ export default function DashboardSearch() {
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Users size={12} /> Funcionários</h4>
                                     <div className="space-y-1">
                                         {results.funcionarios.map((f: any) => (
-                                            <Link href="/funcionarios" key={f.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
+                                            <Link href={`/funcionarios?filter=${f.status}&q=${encodeURIComponent(f.nome)}`} key={f.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
                                                 <div className="text-sm font-medium text-slate-800 group-hover:text-blue-600 transition-colors">{f.nome}</div>
                                                 <div className="text-xs text-slate-500">{f.cpf} • {f.setor}</div>
                                             </Link>
@@ -88,7 +88,7 @@ export default function DashboardSearch() {
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Laptop size={12} /> Notebooks</h4>
                                     <div className="space-y-1">
                                         {results.notebooks.map((n: any) => (
-                                            <Link href="/notebooks" key={n.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
+                                            <Link href={`/notebooks?filter=Todos&q=${encodeURIComponent(n.serial)}`} key={n.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
                                                 <div className="text-sm font-medium text-slate-800 group-hover:text-indigo-600 transition-colors">{n.modelo_marca}</div>
                                                 <div className="text-xs text-slate-500">SN: {n.serial} • <span className={n.status === 'Em Uso' ? 'text-amber-600' : 'text-emerald-600'}>{n.status}</span></div>
                                             </Link>
@@ -102,7 +102,7 @@ export default function DashboardSearch() {
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><Smartphone size={12} /> Celulares</h4>
                                     <div className="space-y-1">
                                         {results.celulares.map((c: any) => (
-                                            <Link href="/celulares" key={c.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
+                                            <Link href={`/celulares?filter=Todos&q=${encodeURIComponent(c.serial)}`} key={c.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
                                                 <div className="text-sm font-medium text-slate-800 group-hover:text-purple-600 transition-colors">{c.modelo_marca}</div>
                                                 <div className="text-xs text-slate-500">IMEI/SN: {c.serial} • <span className={c.status === 'Em Uso' ? 'text-amber-600' : 'text-emerald-600'}>{c.status}</span></div>
                                             </Link>
@@ -116,7 +116,7 @@ export default function DashboardSearch() {
                                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1"><SmartphoneNfc size={12} /> Chips</h4>
                                     <div className="space-y-1">
                                         {results.chips.map((ch: any) => (
-                                            <Link href="/chips" key={ch.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
+                                            <Link href={`/chips?filter=Todos&q=${encodeURIComponent(ch.numero)}`} key={ch.id} onClick={() => setIsOpen(false)} className="block p-2 hover:bg-slate-50 rounded-lg group">
                                                 <div className="text-sm font-medium text-slate-800 group-hover:text-pink-600 transition-colors">{ch.numero}</div>
                                                 <div className="text-xs text-slate-500">{ch.plano} • <span className={ch.status === 'Em Uso' ? 'text-amber-600' : 'text-emerald-600'}>{ch.status}</span></div>
                                             </Link>

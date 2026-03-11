@@ -2,19 +2,30 @@ import { getChips, addChip, vincularChipAoFuncionario } from '@/app/actions/chip
 import { getFuncionarios } from '@/app/actions/funcionarios';
 import { SmartphoneNfc, Columns, Filter } from 'lucide-react';
 import ChipCard from '@/components/ChipCard';
+import LocalSearch from '@/components/LocalSearch';
 
-export default async function ChipsPage(props: { searchParams: Promise<{ filter?: string }> }) {
+export default async function ChipsPage(props: { searchParams: Promise<{ filter?: string, q?: string }> }) {
     const searchParams = await props.searchParams;
     const chips = await getChips();
     const funcionarios = await getFuncionarios();
 
     const currentFilter = searchParams?.filter || 'Todos';
-    const filteredChips = currentFilter === 'Todos' ? chips : chips?.filter(c => c.status === currentFilter);
+    const q = searchParams?.q?.toLowerCase() || '';
+
+    const filteredChips = chips?.filter(c => {
+        const matchesStatus = currentFilter === 'Todos' || c.status === currentFilter;
+        const matchesQuery = q ? (
+            c.numero?.toLowerCase().includes(q) ||
+            c.plano?.toLowerCase().includes(q)
+        ) : true;
+        return matchesStatus && matchesQuery;
+    });
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <h1 className="text-3xl font-bold text-slate-800">Chips de Telefone</h1>
+                <LocalSearch placeholder="Buscar chip por número ou plano..." />
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">

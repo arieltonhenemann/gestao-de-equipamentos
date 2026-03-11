@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { LayoutDashboard, Users, Laptop, Smartphone, SmartphoneNfc, History } from 'lucide-react';
 
 export default function Sidebar() {
@@ -12,9 +13,16 @@ export default function Sidebar() {
     ];
 
     return (
-        <div className="w-64 bg-slate-900 text-white min-h-screen flex flex-col p-4">
+        <div className="w-64 bg-slate-900 text-white min-h-screen flex flex-col p-4 print:hidden">
             <div className="mb-8 px-4 flex items-center justify-between">
-                <h1 className="text-xl font-bold text-white tracking-widest hidden md:block">GESTOR</h1>
+                <div className="relative w-32 h-12 hidden md:block">
+                    <Image 
+                        src="/Logo-vorx.png" 
+                        alt="Logo VORX COMPANY" 
+                        fill
+                        className="object-contain"
+                    />
+                </div>
             </div>
             <nav className="flex-1 space-y-2">
                 {menuItems.map((item) => {
