@@ -2,7 +2,7 @@
 
 import { supabase } from '@/lib/supabase';
 
-type TipoEquipamento = 'notebook' | 'celular' | 'chip';
+type TipoEquipamento = 'notebook' | 'celular' | 'chip' | 'funcionario';
 
 export async function registrarHistorico(
     equipamento_id: string,

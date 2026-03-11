@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Printer, Smartphone, Laptop, CreditCard, CheckSquare } from 'lucide-react';
+import { registrarHistorico } from '@/app/actions/historico';
 
 interface Funcionario {
     id: string;
@@ -76,6 +77,19 @@ export default function TermoModal({ func, isOpen, onClose }: TermoModalProps) {
 
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
+
+        // Registrar o histórico (async no background, não trava o modal)
+        const itemsGerados = [];
+        if (imprimirCelular && celular) itemsGerados.push('Celular');
+        if (imprimirNotebook && notebook) itemsGerados.push('Notebook');
+        if (imprimirChip && chip) itemsGerados.push('Chip');
+        
+        registrarHistorico(
+            func.id, 
+            'funcionario', 
+            'Geração de Termo de Responsabilidade', 
+            `Termo gerado para ${func.nome} (${itemsGerados.join(', ')})`
+        );
 
         printWindow.document.write(`
             <html>
