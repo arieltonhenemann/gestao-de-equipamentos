@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { getHistorico } from '@/app/actions/historico';
 import { X, Clock, Activity, CheckCircle, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
 
 interface HistoryModalProps {
@@ -87,9 +88,9 @@ export default function HistoryModal({ equipamentoId, isOpen, onClose, titulo }:
                                     <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm flex flex-col gap-1">
                                         <div className="flex items-start justify-between gap-2">
                                             <span className="font-semibold text-sm text-slate-800">{log.acao}</span>
-                                            <span className="text-[10px] text-slate-400 font-mono whitespace-nowrap bg-slate-100 px-1.5 py-0.5 rounded">
-                                                {format(new Date(log.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                                            </span>
+                                            <div className="text-xs text-slate-400 mt-2">
+                                                {formatInTimeZone(new Date(log.created_at), 'America/Sao_Paulo', "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                            </div>
                                         </div>
                                         <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                                             {log.descricao}

@@ -1,9 +1,7 @@
 import { getAllHistorico } from '@/app/actions/historico';
-import { Activity, CheckCircle, AlertTriangle, Clock, Server } from 'lucide-react';
-import { format } from 'date-fns';
+import { Activity, CheckCircle, AlertTriangle, Server, Clock } from 'lucide-react';
+import { formatInTimeZone } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
-
-export const dynamic = 'force-dynamic';
 
 export default async function HistoricoGeralPage() {
     const logs = await getAllHistorico();
@@ -44,7 +42,9 @@ export default async function HistoricoGeralPage() {
                                         </div>
                                         <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded">
                                             <Clock size={12} />
-                                            {format(new Date(log.created_at), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                                            <span className="text-sm font-medium text-slate-500 whitespace-nowrap">
+                                                {formatInTimeZone(new Date(log.created_at), 'America/Sao_Paulo', "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                                            </span>
                                         </div>
                                     </div>
                                     <p className="text-sm text-slate-600 leading-relaxed font-medium">
