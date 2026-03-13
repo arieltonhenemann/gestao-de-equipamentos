@@ -25,6 +25,8 @@ export async function addCelular(formData: FormData) {
     armazenamento: formData.get('armazenamento') as string,
     tela: formData.get('tela') as string,
     serial: formData.get('serial') as string,
+    email_supervisionado: (formData.get('email_supervisionado') as string) || null,
+    email_supervisor: (formData.get('email_supervisor') as string) || null,
   };
 
   const { data, error } = await supabase.from('celulares').insert([obj]).select();

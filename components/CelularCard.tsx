@@ -21,9 +21,15 @@ export default function CelularCard({ cel, funcionarios }: { cel: any, funcionar
                         {cel.status}
                     </span>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-slate-500 mb-3">
+                <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 mb-3">
                     <span className="flex items-center gap-1"><Smartphone size={14} className="text-slate-400" /> {cel.processador}</span>
                     <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded text-xs text-slate-600">IMEI/Serial: {cel.serial}</span>
+                    {cel.email_supervisionado && (
+                        <span className="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded text-xs">📧 Supervisonado: {cel.email_supervisionado}</span>
+                    )}
+                    {cel.email_supervisor && (
+                        <span className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-xs">👤 Supervisor: {cel.email_supervisor}</span>
+                    )}
                 </div>
                 <div className="flex gap-4 text-xs font-medium text-slate-500 bg-slate-50 w-fit p-2 rounded-lg border border-slate-100">
                     <div className="flex flex-col"><span className="text-slate-400 text-[10px] uppercase tracking-wider">Memória</span><span className="text-slate-700">{cel.memoria}</span></div>

@@ -73,6 +73,16 @@ export default async function CelularesPage(props: { searchParams: Promise<{ fil
                             <input name="serial" type="text" required placeholder="Ex: 990000862471854"
                                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm text-slate-900" />
                         </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Email supervisionado</label>
+                            <input name="email_supervisionado" type="email" placeholder="Ex: usuario@empresa.com"
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm text-slate-900" />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Email supervisor</label>
+                            <input name="email_supervisor" type="email" placeholder="Ex: supervisor@empresa.com"
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm text-slate-900" />
+                        </div>
 
                         <button type="submit" className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2.5 rounded-lg transition-colors">
                             Cadastrar Celular
