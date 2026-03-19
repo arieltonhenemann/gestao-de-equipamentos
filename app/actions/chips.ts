@@ -88,3 +88,21 @@ export async function toggleStatusChip(chipId: string, currentStatus: string) {
 
   revalidatePath('/chips');
 }
+
+export async function editarChipInfo(id: string, numero: string, plano: string) {
+  const { error } = await supabase
+    .from('chips')
+    .update({ numero, plano })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+
+  await registrarHistorico(
+    id, 
+    'chip', 
+    'Edição de Info', 
+    `Informações do chip atualizadas: Número: ${numero}, Plano: ${plano}`
+  );
+
+  revalidatePath('/chips');
+}

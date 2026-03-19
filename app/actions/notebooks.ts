@@ -86,15 +86,15 @@ export async function vincularNotebookAoFuncionario(formData: FormData) {
   revalidatePath('/funcionarios');
 }
 
-export async function editarNotebookInfo(id: string, processador: string, memoria: string, hd: string, so: string) {
+export async function editarNotebookInfo(id: string, modelo_marca: string, processador: string, memoria: string, hd: string, so: string) {
   const { error } = await supabase
     .from('notebooks')
-    .update({ processador, memoria, hd, so })
+    .update({ modelo_marca, processador, memoria, hd, so })
     .eq('id', id);
 
   if (error) throw new Error(error.message);
 
-  await registrarHistorico(id, 'notebook', 'Upgrade/Edição de Hardware', `Componentes atualizados: ${processador}, ${memoria} RAM, ${hd}, ${so}`);
+  await registrarHistorico(id, 'notebook', 'Upgrade/Edição de Hardware', `Informações atualizadas: ${modelo_marca}, ${processador}, ${memoria} RAM, ${hd}, ${so}`);
 
   revalidatePath('/notebooks');
 }

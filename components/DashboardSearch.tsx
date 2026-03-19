@@ -51,7 +51,7 @@ export default function DashboardSearch() {
                     onChange={(e) => setQuery(e.target.value)}
                     onFocus={() => { if (query.length >= 2) setIsOpen(true) }}
                     placeholder="Pesquisar funcionário, notebook, celular ou chip..."
-                    className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-slate-400"
+                    className="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-slate-400"
                 />
                 {isLoading && (
                     <Loader2 className="absolute right-3 text-blue-500 animate-spin" size={18} />

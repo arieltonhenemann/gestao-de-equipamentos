@@ -42,36 +42,36 @@ export default async function NotebooksPage(props: { searchParams: Promise<{ fil
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Modelo / Marca</label>
                             <input name="modelo_marca" type="text" required placeholder="Ex: Dell Inspiron 15"
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Processador</label>
                                 <input name="processador" type="text" required placeholder="Ex: i5 11ª Ger"
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Memória RAM</label>
                                 <input name="memoria" type="text" required placeholder="Ex: 16GB"
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Armazenamento</label>
                                 <input name="hd" type="text" required placeholder="Ex: 512GB SSD"
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Sistema Oper.</label>
                                 <input name="so" type="text" required placeholder="Ex: Windows 11"
-                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                             </div>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Nº Serial / Service Tag</label>
                             <input name="serial" type="text" required placeholder="Ex: ABC123XP"
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm text-black" />
                         </div>
 
                         <button type="submit" className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition-colors">

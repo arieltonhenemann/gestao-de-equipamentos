@@ -1,12 +1,39 @@
 "use client"
 
 import { useState } from 'react';
-import { SmartphoneNfc, UserMinus, UserPlus, FileEdit, Check, X, Clock } from 'lucide-react';
-import { vincularChipAoFuncionario, toggleStatusChip } from '@/app/actions/chips';
+import { SmartphoneNfc, UserMinus, UserPlus, Check, X, Clock, Edit2 } from 'lucide-react';
+import { vincularChipAoFuncionario, toggleStatusChip, editarChipInfo } from '@/app/actions/chips';
 import HistoryModal from '@/components/HistoryModal';
 
 export default function ChipCard({ chip, funcionarios }: { chip: any, funcionarios: any[] }) {
     const [showHistory, setShowHistory] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [numero, setNumero] = useState(chip.numero);
+    const [plano, setPlano] = useState(chip.plano);
+    const [loading, setLoading] = useState(false);
+
+    const handleSalvar = async () => {
+        if (!numero.trim() || !plano.trim()) {
+            setIsEditing(false);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await editarChipInfo(chip.id, numero, plano);
+            setIsEditing(false);
+        } catch (e) {
+            alert("Erro ao editar informações!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancelar = () => {
+        setIsEditing(false);
+        setNumero(chip.numero);
+        setPlano(chip.plano);
+    };
 
     return (
         <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-6 items-center justify-between hover:shadow-md transition-shadow">
@@ -16,7 +43,23 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
                 </div>
                 <div>
                     <div className="flex items-center gap-3 mb-1">
-                        <h3 className="text-lg font-bold text-slate-800 font-mono tracking-tight">{chip.numero}</h3>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={numero}
+                                onChange={e => setNumero(e.target.value)}
+                                className="p-1.5 border border-slate-300 rounded-md text-lg font-bold font-mono tracking-tight w-full focus:ring-2 focus:ring-pink-500 focus:outline-none text-black"
+                                placeholder="Número"
+                                autoFocus
+                            />
+                        ) : (
+                            <h3 className="text-lg font-bold text-slate-800 font-mono tracking-tight flex items-center gap-2">
+                                {chip.numero}
+                                <button onClick={() => setIsEditing(true)} className="text-slate-400 hover:text-pink-500 transition-colors" title="Editar Informações">
+                                    <Edit2 size={14} />
+                                </button>
+                            </h3>
+                        )}
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
                             ${chip.status === 'Ativo' ? 'bg-emerald-100 text-emerald-700' :
                                 chip.status === 'Em Uso' ? 'bg-pink-100 text-pink-700' :
@@ -24,7 +67,30 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
                             {chip.status}
                         </span>
                     </div>
-                    <div className="text-sm font-medium text-slate-600">Plano: <span className="text-slate-800">{chip.plano}</span></div>
+                    {isEditing ? (
+                        <div className="space-y-3 mt-2">
+                            <div className="space-y-1">
+                                <label className="text-[10px] uppercase text-slate-400 font-bold">Plano Contratado</label>
+                                <input
+                                    type="text"
+                                    value={plano}
+                                    onChange={e => setPlano(e.target.value)}
+                                    className="w-full p-2 border border-slate-200 rounded-lg text-xs font-medium text-black"
+                                    placeholder="Plano"
+                                />
+                            </div>
+                            <div className="flex gap-2">
+                                <button onClick={handleSalvar} disabled={loading} className="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded-md text-xs font-semibold flex items-center justify-center flex-1 transition-colors disabled:opacity-50">
+                                    <Check size={14} className="mr-1" /> Salvar
+                                </button>
+                                <button onClick={handleCancelar} className="px-3 py-1.5 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded-md text-xs font-semibold flex items-center justify-center flex-1 transition-colors">
+                                    <X size={14} className="mr-1" /> Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="text-sm font-medium text-slate-600">Plano: <span className="text-slate-800">{chip.plano}</span></div>
+                    )}
                 </div>
             </div>
 
@@ -47,7 +113,7 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
                         <form action={vincularChipAoFuncionario} className="space-y-2">
                             <input type="hidden" name="chip_id" value={chip.id} />
                             <input type="hidden" name="acao" value="vincular" />
-                            <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-slate-900 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                            <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-black focus:ring-2 focus:ring-pink-500 focus:outline-none">
                                 <option value="">Atribuir Funcionario...</option>
                                 {funcionarios?.filter(f => f.status === 'Ativo').map(f => (
                                     <option key={f.id} value={f.id}>{f.nome}</option>

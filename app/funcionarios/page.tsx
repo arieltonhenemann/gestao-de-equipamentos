@@ -40,17 +40,17 @@ export default async function FuncionariosPage(props: { searchParams: Promise<{ 
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Nome Completo</label>
                             <input name="nome" type="text" required
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-black" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">CPF</label>
                             <input name="cpf" type="text" required
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-black" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Setor</label>
                             <input name="setor" type="text" required
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm text-black" />
                         </div>
                         <button type="submit" className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors">
                             Cadastrar Funcionário

@@ -103,3 +103,38 @@ export async function toggleManutencaoCelular(celularId: string, currentStatus: 
 
   revalidatePath('/celulares');
 }
+
+export async function editarCelularInfo(
+  id: string, 
+  modelo_marca: string, 
+  processador: string, 
+  memoria: string, 
+  armazenamento: string, 
+  tela: string, 
+  email_supervisionado: string | null, 
+  email_supervisor: string | null
+) {
+  const { error } = await supabase
+    .from('celulares')
+    .update({ 
+      modelo_marca, 
+      processador, 
+      memoria, 
+      armazenamento, 
+      tela, 
+      email_supervisionado, 
+      email_supervisor 
+    })
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+
+  await registrarHistorico(
+    id, 
+    'celular', 
+    'Edição de Info', 
+    `Informações do celular atualizadas: ${modelo_marca} (${processador}, ${memoria}, ${armazenamento}, ${tela})`
+  );
+
+  revalidatePath('/celulares');
+}

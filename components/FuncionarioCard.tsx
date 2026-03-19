@@ -51,7 +51,7 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                                 type="text"
                                 value={nomeEditado}
                                 onChange={(e) => setNomeEditado(e.target.value)}
-                                className="p-1 border border-slate-300 rounded text-slate-900 text-sm font-bold w-full sm:w-[200px] focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="p-1 border border-slate-300 rounded text-black text-sm font-bold w-full sm:w-[200px] focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                 placeholder="Nome"
                                 autoFocus
                             />
@@ -59,7 +59,7 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                                 type="text"
                                 value={setorEditado}
                                 onChange={(e) => setSetorEditado(e.target.value)}
-                                className="p-1 border border-slate-300 rounded text-slate-900 text-sm w-full sm:w-[150px] focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="p-1 border border-slate-300 rounded text-black text-sm w-full sm:w-[150px] focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                 placeholder="Setor"
                             />
                             <div className="flex gap-1">
@@ -125,22 +125,22 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                         {func.notebooks?.map((note: any) => (
                             <div key={note.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
                                 <span className="font-semibold text-slate-700 flex items-center gap-2"><Laptop size={14} className="text-indigo-500" /> Notebook</span>
-                                <span className="text-slate-600">Modelo/Marca: <span className="text-slate-900 font-medium">{note.modelo_marca}</span></span>
-                                <span className="text-slate-600">Serial: <span className="text-slate-900 font-medium">{note.serial}</span></span>
+                                <span className="text-slate-600">Modelo/Marca: <span className="text-black font-medium">{note.modelo_marca}</span></span>
+                                <span className="text-slate-600">Serial: <span className="text-black font-medium">{note.serial}</span></span>
                             </div>
                         ))}
                         {func.celulares?.map((cel: any) => (
                             <div key={cel.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
                                 <span className="font-semibold text-slate-700 flex items-center gap-2"><Smartphone size={14} className="text-purple-500" /> Celular</span>
-                                <span className="text-slate-600">Modelo/Marca: <span className="text-slate-900 font-medium">{cel.modelo_marca}</span></span>
-                                <span className="text-slate-600">Serial: <span className="text-slate-900 font-medium">{cel.serial}</span></span>
+                                <span className="text-slate-600">Modelo/Marca: <span className="text-black font-medium">{cel.modelo_marca}</span></span>
+                                <span className="text-slate-600">Serial: <span className="text-black font-medium">{cel.serial}</span></span>
                             </div>
                         ))}
                         {func.chips?.map((chip: any) => (
                             <div key={chip.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
                                 <span className="font-semibold text-slate-700 flex items-center gap-2"><SmartphoneNfc size={14} className="text-pink-500" /> Chip</span>
-                                <span className="text-slate-600">Número: <span className="text-slate-900 font-medium">{chip.numero}</span></span>
-                                <span className="text-slate-600">Plano: <span className="text-slate-900 font-medium">{chip.plano}</span></span>
+                                <span className="text-slate-600">Número: <span className="text-black font-medium">{chip.numero}</span></span>
+                                <span className="text-slate-600">Plano: <span className="text-black font-medium">{chip.plano}</span></span>
                             </div>
                         ))}
                     </div>

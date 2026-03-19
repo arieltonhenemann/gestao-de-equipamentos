@@ -41,16 +41,16 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Nº do Telefone</label>
                             <input name="numero" type="text" required placeholder="Ex: (11) 99999-9999"
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-black" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Plano Contratado</label>
                             <input name="plano" type="text" required placeholder="Ex: TIM Black 50GB"
-                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-slate-900" />
+                                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-black" />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Status Inicial</label>
-                            <select name="status" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-slate-900">
+                            <select name="status" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-black">
                                 <option value="Ativo">Ativo (Pronto para Uso)</option>
                                 <option value="Inativo">Inativo (Cancelado)</option>
                             </select>

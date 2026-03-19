@@ -46,7 +46,7 @@ export default function LocalSearch({ placeholder }: { placeholder: string }) {
                     value={query}
                     onChange={(e) => handleSearch(e.target.value)}
                     placeholder={placeholder}
-                    className="w-full pl-10 pr-10 py-2 bg-white border border-slate-200 rounded-xl shadow-sm text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-slate-400"
+                    className="w-full pl-10 pr-10 py-2 bg-white border border-slate-200 rounded-xl shadow-sm text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-slate-400"
                 />
                 {query.length > 0 && (
                     <button onClick={clearSearch} className="absolute right-3 text-slate-400 hover:text-slate-600">
