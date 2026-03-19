@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase';
 
 export async function getDashboardStats() {
   const [funcCount, notebCount, celCount, chipCount] = await Promise.all([
-    supabase.from('funcionarios').select('*', { count: 'exact', head: true }),
+    supabase.from('funcionarios').select('*', { count: 'exact', head: true }).eq('status', 'Ativo'),
     supabase.from('notebooks').select('*', { count: 'exact', head: true }),
     supabase.from('celulares').select('*', { count: 'exact', head: true }),
     supabase.from('chips').select('*', { count: 'exact', head: true })
