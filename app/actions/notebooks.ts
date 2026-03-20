@@ -114,3 +114,26 @@ export async function toggleManutencaoNotebook(notebookId: string, currentStatus
 
   revalidatePath('/notebooks');
 }
+
+export async function toggleStatusNotebook(id: string, currentStatus: string) {
+  const newStatus = currentStatus === 'Inativo' ? 'Disponível' : 'Inativo';
+  
+  const updateData: any = { status: newStatus };
+  
+  if (newStatus === 'Inativo') {
+    updateData.funcionario_id = null;
+  }
+
+  const { error } = await supabase
+    .from('notebooks')
+    .update(updateData)
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+
+  const acao = newStatus === 'Inativo' ? 'Notebook Inativado' : 'Notebook Reativado';
+  await registrarHistorico(id, 'notebook', acao, `Status alterado manualmente para ${newStatus}`);
+
+  revalidatePath('/notebooks');
+  revalidatePath('/funcionarios');
+}

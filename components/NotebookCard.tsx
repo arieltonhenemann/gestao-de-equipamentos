@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Cpu, HardDrive, ShieldCheck, UserMinus, UserPlus, Edit2, Check, X, Wrench, Clock } from 'lucide-react';
-import { editarNotebookInfo, vincularNotebookAoFuncionario, toggleManutencaoNotebook } from '@/app/actions/notebooks';
+import { editarNotebookInfo, vincularNotebookAoFuncionario, toggleManutencaoNotebook, toggleStatusNotebook } from '@/app/actions/notebooks';
 import HistoryModal from '@/components/HistoryModal';
 
 export default function NotebookCard({ note, funcionarios }: { note: any, funcionarios: any[] }) {
@@ -69,7 +69,8 @@ export default function NotebookCard({ note, funcionarios }: { note: any, funcio
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
                         ${note.status === 'Disponível' ? 'bg-emerald-100 text-emerald-700' :
                             note.status === 'Em Uso' ? 'bg-blue-100 text-blue-700' :
-                                'bg-orange-100 text-orange-700'}`}>
+                            note.status === 'Em Manutenção' ? 'bg-orange-100 text-orange-700' :
+                                'bg-slate-200 text-slate-700'}`}>
                         {note.status}
                     </span>
                 </div>
@@ -195,6 +196,15 @@ export default function NotebookCard({ note, funcionarios }: { note: any, funcio
                 <button type="button" onClick={() => setShowHistory(true)} className="w-full flex items-center justify-center gap-1.5 text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-md transition-colors font-medium mt-2 border border-slate-200">
                     <Clock size={14} /> Ver Histórico
                 </button>
+
+                <form action={async () => {
+                    if (note.status !== 'Inativo' && !confirm("Tem certeza que deseja inativar este notebook? Se estiver em uso, ele será desvinculado do funcionário.")) return;
+                    await toggleStatusNotebook(note.id, note.status);
+                }}>
+                    <button type="submit" className="w-full mt-2 text-[10px] text-slate-400 hover:text-slate-600 underline decoration-slate-200 underline-offset-2 py-1 transition-colors">
+                        {note.status === 'Inativo' ? 'Reativar Notebook' : 'Inativar / Baixar Notebook'}
+                    </button>
+                </form>
             </div>
 
             <HistoryModal

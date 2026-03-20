@@ -1,5 +1,5 @@
 import { getDashboardStats } from '@/app/actions/dashboard';
-import { Users, Laptop, Smartphone, SmartphoneNfc, Activity, CheckCircle2 } from 'lucide-react';
+import { Users, Laptop, Smartphone, SmartphoneNfc, Activity, CheckCircle2, Wrench } from 'lucide-react';
 import DashboardSearch from '@/components/DashboardSearch';
 
 export const dynamic = 'force-dynamic';
@@ -9,9 +9,32 @@ export default async function Home() {
 
   const cards = [
     { title: 'Funcionários', value: stats.funcionarios.total, icon: Users, color: 'bg-blue-500' },
-    { title: 'Notebooks', value: stats.notebooks.total, sub: `${stats.notebooks.emUso} em uso`, sub2: `${stats.notebooks.disponivel} disponível`, icon: Laptop, color: 'bg-indigo-500' },
-    { title: 'Celulares', value: stats.celulares.total, sub: `${stats.celulares.emUso} em uso`, sub2: `${stats.celulares.disponivel} disponível`, icon: Smartphone, color: 'bg-purple-500' },
-    { title: 'Chips', value: stats.chips.total, sub: `${stats.chips.emUso} em uso`, sub2: `${stats.chips.disponivel} disponível`, icon: SmartphoneNfc, color: 'bg-pink-500' },
+    { 
+      title: 'Notebooks', 
+      value: stats.notebooks.total, 
+      sub: `${stats.notebooks.emUso} em uso`, 
+      sub2: `${stats.notebooks.disponivel} disponível`, 
+      sub3: stats.notebooks.manutencao > 0 ? `${stats.notebooks.manutencao} em manutenção` : null,
+      icon: Laptop, 
+      color: 'bg-indigo-500' 
+    },
+    { 
+      title: 'Celulares', 
+      value: stats.celulares.total, 
+      sub: `${stats.celulares.emUso} em uso`, 
+      sub2: `${stats.celulares.disponivel} disponível`, 
+      sub3: stats.celulares.manutencao > 0 ? `${stats.celulares.manutencao} em manutenção` : null,
+      icon: Smartphone, 
+      color: 'bg-purple-500' 
+    },
+    { 
+      title: 'Chips', 
+      value: stats.chips.total, 
+      sub: `${stats.chips.emUso} em uso`, 
+      sub2: `${stats.chips.disponivel} disponível`, 
+      icon: SmartphoneNfc, 
+      color: 'bg-pink-500' 
+    },
   ];
 
   return (
@@ -32,7 +55,7 @@ export default async function Home() {
               <h3 className="text-slate-500 font-medium text-sm">{card.title}</h3>
               <p className="text-3xl font-bold text-slate-900 mt-1">{card.value}</p>
 
-              <div className="flex gap-2 mt-2">
+              <div className="flex flex-wrap gap-2 mt-2">
                 {card.sub && (
                   <div className="flex items-center gap-1 text-xs text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-md">
                     <Activity size={12} className="text-emerald-500" />
@@ -43,6 +66,12 @@ export default async function Home() {
                   <div className="flex items-center gap-1 text-xs text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-md">
                     <CheckCircle2 size={12} className="text-blue-500" />
                     {card.sub2}
+                  </div>
+                )}
+                {card.sub3 && (
+                  <div className="flex items-center gap-1 text-xs text-slate-500 font-medium bg-slate-50 px-2 py-1 rounded-md border border-orange-100">
+                    <Wrench size={12} className="text-orange-500" />
+                    {card.sub3}
                   </div>
                 )}
               </div>

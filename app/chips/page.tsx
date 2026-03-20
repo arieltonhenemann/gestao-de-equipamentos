@@ -13,7 +13,7 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
     const q = searchParams?.q?.toLowerCase() || '';
 
     const filteredChips = chips?.filter(c => {
-        const matchesStatus = currentFilter === 'Todos' || c.status === currentFilter;
+        const matchesStatus = currentFilter === 'Todos' ? c.status !== 'Inativo' : c.status === currentFilter;
         const matchesQuery = q ? (
             c.numero?.toLowerCase().includes(q) ||
             c.plano?.toLowerCase().includes(q)

@@ -101,12 +101,12 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                 <div className="flex flex-wrap gap-2 mt-1">
                     {func.notebooks && func.notebooks.length > 0 && (
                         <span className="flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md text-xs font-medium border border-indigo-100">
-                            <Laptop size={14} /> 1 Notebook
+                            <Laptop size={14} /> {func.notebooks.length} Notebook(s)
                         </span>
                     )}
                     {func.celulares && func.celulares.length > 0 && (
                         <span className="flex items-center gap-1.5 bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md text-xs font-medium border border-purple-100">
-                            <Smartphone size={14} /> 1 Celular
+                            <Smartphone size={14} /> {func.celulares.length} Celular(es)
                         </span>
                     )}
                     {func.chips && func.chips.length > 0 && (

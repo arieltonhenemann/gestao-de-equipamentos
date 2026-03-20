@@ -60,16 +60,6 @@ export async function vincularCelularAoFuncionario(formData: FormData) {
     await registrarHistorico(celularId, 'celular', 'Desvinculação', 'Equipamento devolvido / desvinculado do funcionário');
 
   } else {
-    // Verificar se funcionário já tem celular
-    const { data: funcCelulares } = await supabase
-      .from('celulares')
-      .select('id')
-      .eq('funcionario_id', funcionarioId);
-
-    if (funcCelulares && funcCelulares.length > 0) {
-      throw new Error("Este funcionário já possui um Celular vinculado.");
-    }
-
     // Buscar nome do funcionario para o historico
     const { data: funcData } = await supabase.from('funcionarios').select('nome').eq('id', funcionarioId).single();
 
@@ -137,4 +127,27 @@ export async function editarCelularInfo(
   );
 
   revalidatePath('/celulares');
+}
+
+export async function toggleStatusCelular(id: string, currentStatus: string) {
+  const newStatus = currentStatus === 'Inativo' ? 'Disponível' : 'Inativo';
+  
+  const updateData: any = { status: newStatus };
+  
+  if (newStatus === 'Inativo') {
+    updateData.funcionario_id = null;
+  }
+
+  const { error } = await supabase
+    .from('celulares')
+    .update(updateData)
+    .eq('id', id);
+
+  if (error) throw new Error(error.message);
+
+  const acao = newStatus === 'Inativo' ? 'Celular Inativado' : 'Celular Reativado';
+  await registrarHistorico(id, 'celular', acao, `Status alterado manualmente para ${newStatus}`);
+
+  revalidatePath('/celulares');
+  revalidatePath('/funcionarios');
 }

@@ -3,9 +3,9 @@ import { supabase } from '@/lib/supabase';
 export async function getDashboardStats() {
   const [funcCount, notebCount, celCount, chipCount] = await Promise.all([
     supabase.from('funcionarios').select('*', { count: 'exact', head: true }).eq('status', 'Ativo'),
-    supabase.from('notebooks').select('*', { count: 'exact', head: true }),
-    supabase.from('celulares').select('*', { count: 'exact', head: true }),
-    supabase.from('chips').select('*', { count: 'exact', head: true })
+    supabase.from('notebooks').select('*', { count: 'exact', head: true }).neq('status', 'Inativo'),
+    supabase.from('celulares').select('*', { count: 'exact', head: true }).neq('status', 'Inativo'),
+    supabase.from('chips').select('*', { count: 'exact', head: true }).neq('status', 'Inativo')
   ]);
 
   const [notebInUse, celInUse, chipInUse] = await Promise.all([
@@ -20,10 +20,29 @@ export async function getDashboardStats() {
     supabase.from('chips').select('*', { count: 'exact', head: true }).eq('status', 'Ativo')
   ]);
 
+  const [notebMaintenance, celMaintenance] = await Promise.all([
+    supabase.from('notebooks').select('*', { count: 'exact', head: true }).eq('status', 'Em Manutenção'),
+    supabase.from('celulares').select('*', { count: 'exact', head: true }).eq('status', 'Em Manutenção')
+  ]);
+
   return {
     funcionarios: { total: funcCount.count || 0 },
-    notebooks: { total: notebCount.count || 0, emUso: notebInUse.count || 0, disponivel: notebAvailable.count || 0 },
-    celulares: { total: celCount.count || 0, emUso: celInUse.count || 0, disponivel: celAvailable.count || 0 },
-    chips: { total: chipCount.count || 0, emUso: chipInUse.count || 0, disponivel: chipAvailable.count || 0 }
+    notebooks: { 
+      total: notebCount.count || 0, 
+      emUso: notebInUse.count || 0, 
+      disponivel: notebAvailable.count || 0,
+      manutencao: notebMaintenance.count || 0
+    },
+    celulares: { 
+      total: celCount.count || 0, 
+      emUso: celInUse.count || 0, 
+      disponivel: celAvailable.count || 0,
+      manutencao: celMaintenance.count || 0
+    },
+    chips: { 
+      total: chipCount.count || 0, 
+      emUso: chipInUse.count || 0, 
+      disponivel: chipAvailable.count || 0 
+    }
   };
 }

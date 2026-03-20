@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from 'react';
-import { Smartphone, UserMinus, UserPlus, Clock, Edit2, Check, X } from 'lucide-react';
-import { vincularCelularAoFuncionario, editarCelularInfo } from '@/app/actions/celulares';
+import { Smartphone, UserMinus, UserPlus, Clock, Edit2, Check, X, PowerOff } from 'lucide-react';
+import { vincularCelularAoFuncionario, editarCelularInfo, toggleStatusCelular } from '@/app/actions/celulares';
 import CelularMaintenanceForm from '@/components/CelularMaintenanceForm';
 import HistoryModal from '@/components/HistoryModal';
 
@@ -81,7 +81,8 @@ export default function CelularCard({ cel, funcionarios }: { cel: any, funcionar
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
                         ${cel.status === 'Disponível' ? 'bg-emerald-100 text-emerald-700' :
                             cel.status === 'Em Uso' ? 'bg-blue-100 text-blue-700' :
-                                'bg-orange-100 text-orange-700'}`}>
+                            cel.status === 'Em Manutenção' ? 'bg-orange-100 text-orange-700' :
+                                'bg-slate-200 text-slate-700'}`}>
                         {cel.status}
                     </span>
                 </div>
@@ -178,7 +179,7 @@ export default function CelularCard({ cel, funcionarios }: { cel: any, funcionar
                             <input type="hidden" name="acao" value="vincular" />
                             <select name="funcionario_id" required className="w-full p-2 bg-white border border-slate-300 rounded-md text-xs text-black focus:ring-2 focus:ring-purple-500 focus:outline-none">
                                 <option value="">Selecionar Funcionário...</option>
-                                {funcionarios?.filter(f => f.status === 'Ativo' && (!f.celulares || f.celulares.length === 0)).map(f => (
+                                {funcionarios?.filter(f => f.status === 'Ativo').map(f => (
                                     <option key={f.id} value={f.id}>{f.nome}</option>
                                 ))}
                             </select>
@@ -194,6 +195,15 @@ export default function CelularCard({ cel, funcionarios }: { cel: any, funcionar
                 <button type="button" onClick={() => setShowHistory(true)} className="w-full flex items-center justify-center gap-1.5 text-xs bg-slate-100 text-slate-600 hover:bg-slate-200 px-3 py-1.5 rounded-md transition-colors font-medium mt-2 border border-slate-200">
                     <Clock size={14} /> Ver Histórico
                 </button>
+
+                <form action={async () => {
+                    if (cel.status !== 'Inativo' && !confirm("Tem certeza que deseja inativar este celular? Se estiver em uso, ele será desvinculado do funcionário.")) return;
+                    await toggleStatusCelular(cel.id, cel.status);
+                }}>
+                    <button type="submit" className="w-full mt-2 text-[10px] text-slate-400 hover:text-slate-600 underline decoration-slate-200 underline-offset-2 py-1 transition-colors">
+                        {cel.status === 'Inativo' ? 'Reativar Celular' : 'Inativar / Baixar Celular'}
+                    </button>
+                </form>
             </div>
 
             <HistoryModal
