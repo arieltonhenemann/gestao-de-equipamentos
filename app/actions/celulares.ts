@@ -1,10 +1,11 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 import { registrarHistorico } from './historico';
 
 export async function getCelulares() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('celulares')
     .select(`
@@ -18,6 +19,7 @@ export async function getCelulares() {
 }
 
 export async function addCelular(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const obj = {
     modelo_marca: formData.get('modelo_marca') as string,
     processador: formData.get('processador') as string,
@@ -46,6 +48,7 @@ export async function addCelular(formData: FormData) {
 }
 
 export async function vincularCelularAoFuncionario(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const celularId = formData.get('celular_id') as string;
   const funcionarioId = formData.get('funcionario_id') as string;
   const acao = formData.get('acao') as string; // 'vincular' ou 'desvincular'
@@ -79,6 +82,7 @@ export async function vincularCelularAoFuncionario(formData: FormData) {
 }
 
 export async function toggleManutencaoCelular(celularId: string, currentStatus: string, observacoes: string = "") {
+  const supabase = await createSupabaseServerClient();
   const newStatus = currentStatus === 'Em Manutenção' ? 'Disponível' : 'Em Manutenção';
   
   const { error } = await supabase
@@ -104,6 +108,7 @@ export async function editarCelularInfo(
   email_supervisionado: string | null, 
   email_supervisor: string | null
 ) {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('celulares')
     .update({ 
@@ -130,9 +135,10 @@ export async function editarCelularInfo(
 }
 
 export async function toggleStatusCelular(id: string, currentStatus: string) {
+  const supabase = await createSupabaseServerClient();
   const newStatus = currentStatus === 'Inativo' ? 'Disponível' : 'Inativo';
   
-  const updateData: any = { status: newStatus };
+  const updateData: Record<string, string | null> = { status: newStatus };
   
   if (newStatus === 'Inativo') {
     updateData.funcionario_id = null;

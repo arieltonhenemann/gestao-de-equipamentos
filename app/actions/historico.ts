@@ -1,6 +1,6 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 type TipoEquipamento = 'notebook' | 'celular' | 'chip' | 'funcionario';
 
@@ -10,6 +10,7 @@ export async function registrarHistorico(
     acao: string,
     descricao: string
 ) {
+    const supabase = await createSupabaseServerClient();
     const { error } = await supabase.from('historico_equipamentos').insert([{
         equipamento_id,
         equipamento_tipo,
@@ -24,6 +25,7 @@ export async function registrarHistorico(
 }
 
 export async function getHistorico(equipamento_id: string) {
+    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
         .from('historico_equipamentos')
         .select('*')
@@ -35,6 +37,7 @@ export async function getHistorico(equipamento_id: string) {
 }
 
 export async function getAllHistorico() {
+    const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
         .from('historico_equipamentos')
         .select('*')

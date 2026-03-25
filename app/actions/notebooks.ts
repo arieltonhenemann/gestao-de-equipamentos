@@ -1,10 +1,11 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 import { registrarHistorico } from './historico';
 
 export async function getNotebooks() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('notebooks')
     .select(`
@@ -18,6 +19,7 @@ export async function getNotebooks() {
 }
 
 export async function addNotebook(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const obj = {
     modelo_marca: formData.get('modelo_marca') as string,
     processador: formData.get('processador') as string,
@@ -44,6 +46,7 @@ export async function addNotebook(formData: FormData) {
 }
 
 export async function vincularNotebookAoFuncionario(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const notebookId = formData.get('notebook_id') as string;
   const funcionarioId = formData.get('funcionario_id') as string;
   const acao = formData.get('acao') as string; // 'vincular' ou 'desvincular'
@@ -87,6 +90,7 @@ export async function vincularNotebookAoFuncionario(formData: FormData) {
 }
 
 export async function editarNotebookInfo(id: string, modelo_marca: string, processador: string, memoria: string, hd: string, so: string) {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('notebooks')
     .update({ modelo_marca, processador, memoria, hd, so })
@@ -100,6 +104,7 @@ export async function editarNotebookInfo(id: string, modelo_marca: string, proce
 }
 
 export async function toggleManutencaoNotebook(notebookId: string, currentStatus: string, observacoes: string = "") {
+  const supabase = await createSupabaseServerClient();
   const newStatus = currentStatus === 'Em Manutenção' ? 'Disponível' : 'Em Manutenção';
   
   const { error } = await supabase
@@ -116,9 +121,10 @@ export async function toggleManutencaoNotebook(notebookId: string, currentStatus
 }
 
 export async function toggleStatusNotebook(id: string, currentStatus: string) {
+  const supabase = await createSupabaseServerClient();
   const newStatus = currentStatus === 'Inativo' ? 'Disponível' : 'Inativo';
   
-  const updateData: any = { status: newStatus };
+  const updateData: Record<string, string | null> = { status: newStatus };
   
   if (newStatus === 'Inativo') {
     updateData.funcionario_id = null;

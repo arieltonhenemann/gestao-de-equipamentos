@@ -1,6 +1,8 @@
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export async function getDashboardStats() {
+  const supabase = await createSupabaseServerClient();
+
   const [funcCount, notebCount, celCount, chipCount] = await Promise.all([
     supabase.from('funcionarios').select('*', { count: 'exact', head: true }).eq('status', 'Ativo'),
     supabase.from('notebooks').select('*', { count: 'exact', head: true }).neq('status', 'Inativo'),

@@ -1,10 +1,11 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 import { registrarHistorico } from './historico';
 
 export async function getFuncionarios() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('funcionarios')
     .select(`
@@ -20,6 +21,7 @@ export async function getFuncionarios() {
 }
 
 export async function addFuncionario(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const nome = formData.get('nome') as string;
   const cpf = formData.get('cpf') as string;
   const setor = formData.get('setor') as string;
@@ -42,6 +44,8 @@ export async function addFuncionario(formData: FormData) {
 }
 
 export async function inativarFuncionario(id: string) {
+  const supabase = await createSupabaseServerClient();
+
   // 1. Inativar o funcionário
   const { error: funcError } = await supabase
     .from('funcionarios')
@@ -75,6 +79,7 @@ export async function inativarFuncionario(id: string) {
 }
 
 export async function reativarFuncionario(id: string) {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('funcionarios')
     .update({ status: 'Ativo' })
@@ -88,6 +93,7 @@ export async function reativarFuncionario(id: string) {
 }
 
 export async function editarFuncionarioInfo(id: string, novoNome: string, novoSetor: string) {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('funcionarios')
     .update({ nome: novoNome, setor: novoSetor })

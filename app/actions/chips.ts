@@ -1,10 +1,11 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import { revalidatePath } from 'next/cache';
 import { registrarHistorico } from './historico';
 
 export async function getChips() {
+  const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from('chips')
     .select(`
@@ -18,6 +19,7 @@ export async function getChips() {
 }
 
 export async function addChip(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const obj = {
     numero: formData.get('numero') as string,
     plano: formData.get('plano') as string,
@@ -41,6 +43,7 @@ export async function addChip(formData: FormData) {
 }
 
 export async function vincularChipAoFuncionario(formData: FormData) {
+  const supabase = await createSupabaseServerClient();
   const chipId = formData.get('chip_id') as string;
   const funcionarioId = formData.get('funcionario_id') as string;
   const acao = formData.get('acao') as string; // 'vincular' ou 'desvincular'
@@ -74,6 +77,7 @@ export async function vincularChipAoFuncionario(formData: FormData) {
 }
 
 export async function toggleStatusChip(chipId: string, currentStatus: string) {
+  const supabase = await createSupabaseServerClient();
   const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
   
   const { error } = await supabase
@@ -90,6 +94,7 @@ export async function toggleStatusChip(chipId: string, currentStatus: string) {
 }
 
 export async function editarChipInfo(id: string, numero: string, plano: string) {
+  const supabase = await createSupabaseServerClient();
   const { error } = await supabase
     .from('chips')
     .update({ numero, plano })

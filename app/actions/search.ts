@@ -1,10 +1,11 @@
 "use server"
 
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 
 export async function buscarGlobal(query: string) {
   if (!query || query.trim().length < 2) return { funcionarios: [], notebooks: [], celulares: [], chips: [] };
   
+  const supabase = await createSupabaseServerClient();
   const termo = `%${query.trim()}%`;
   
   const [funcRes, noteRes, celRes, chipRes] = await Promise.all([
