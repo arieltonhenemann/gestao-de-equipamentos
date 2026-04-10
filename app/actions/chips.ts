@@ -23,7 +23,7 @@ export async function addChip(formData: FormData) {
   const obj = {
     numero: formData.get('numero') as string,
     plano: formData.get('plano') as string,
-    status: formData.get('status') as string || 'Ativo',
+    status: formData.get('status') as string || 'Disponível',
   };
 
   const { data, error } = await supabase.from('chips').insert([obj]).select();
@@ -51,7 +51,7 @@ export async function vincularChipAoFuncionario(formData: FormData) {
   if (acao === 'desvincular') {
     const { error } = await supabase
       .from('chips')
-      .update({ funcionario_id: null, status: 'Ativo' })
+      .update({ funcionario_id: null, status: 'Disponível' })
       .eq('id', chipId);
     if (error) throw new Error(error.message);
     
@@ -78,7 +78,7 @@ export async function vincularChipAoFuncionario(formData: FormData) {
 
 export async function toggleStatusChip(chipId: string, currentStatus: string) {
   const supabase = await createSupabaseServerClient();
-  const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
+  const newStatus = currentStatus === 'Disponível' ? 'Inativo' : 'Disponível';
   
   const { error } = await supabase
     .from('chips')

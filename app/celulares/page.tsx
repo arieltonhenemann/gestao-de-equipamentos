@@ -3,14 +3,19 @@ import { getFuncionarios } from '@/app/actions/funcionarios';
 import { Smartphone, Columns, Filter } from 'lucide-react';
 import CelularCard from '@/components/CelularCard';
 import LocalSearch from '@/components/LocalSearch';
+import EmailFilter from '@/components/EmailFilter';
 
-export default async function CelularesPage(props: { searchParams: Promise<{ filter?: string, q?: string }> }) {
+export default async function CelularesPage(props: { searchParams: Promise<{ filter?: string, q?: string, email?: string }> }) {
     const searchParams = await props.searchParams;
     const celulares = await getCelulares();
     const funcionarios = await getFuncionarios();
 
     const currentFilter = searchParams?.filter || 'Todos';
+    const currentEmail = searchParams?.email || 'Todos';
     const q = searchParams?.q?.toLowerCase() || '';
+
+    // Extrair emails únicos para o filtro
+    const uniqueEmails = Array.from(new Set(celulares?.map(c => c.email_supervisionado).filter(Boolean))) as string[];
 
     const filteredCelulares = celulares?.filter(c => {
         const matchesStatus = currentFilter === 'Todos' ? c.status !== 'Inativo' : c.status === currentFilter;
@@ -19,7 +24,12 @@ export default async function CelularesPage(props: { searchParams: Promise<{ fil
             c.serial?.toLowerCase().includes(q) ||
             c.armazenamento?.toLowerCase().includes(q)
         ) : true;
-        return matchesStatus && matchesQuery;
+
+        const matchesEmail = currentEmail === 'Todos' ? true :
+                             currentEmail === 'somente_com_email' ? !!c.email_supervisionado :
+                             c.email_supervisionado === currentEmail;
+
+        return matchesStatus && matchesQuery && matchesEmail;
     });
 
     return (
@@ -93,41 +103,42 @@ export default async function CelularesPage(props: { searchParams: Promise<{ fil
                 {/* Listagem de Celulares */}
                 <div className="xl:col-span-2 space-y-4">
                     {/* Filtros */}
-                    <div className="flex items-center gap-2 mb-2 overflow-x-auto pb-1">
-                        <Filter size={16} className="text-slate-400" />
-                        <span className="text-sm font-medium text-slate-500 mr-2 whitespace-nowrap">Filtrar por Status:</span>
-                        <div className="flex bg-slate-100 p-1 rounded-lg max-w-full overflow-x-auto">
-                            <a
-                                href="/celulares?filter=Todos"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Todos' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                            >
-                                Todos
-                            </a>
-                            <a
-                                href="/celulares?filter=Disponível"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Disponível' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                            >
-                                Disponíveis
-                            </a>
-                            <a
-                                href="/celulares?filter=Em Uso"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Em Uso' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                            >
-                                Em Uso
-                            </a>
-                            <a
-                                href="/celulares?filter=Em Manutenção"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Em Manutenção' ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                            >
-                                Manutenção
-                            </a>
-                            <a
-                                href="/celulares?filter=Inativo"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Inativo' ? 'bg-white text-slate-400 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                            >
-                                Inativos
-                            </a>
+                    <div className="flex flex-wrap items-center gap-4 mb-2 overflow-x-auto pb-1">
+                        <div className="flex items-center gap-2">
+                            <Filter size={16} className="text-slate-400" />
+                            <span className="text-sm font-medium text-slate-500 mr-2 whitespace-nowrap">Filtrar por Status:</span>
+                            <div className="flex bg-slate-100 p-1 rounded-lg">
+                                {['Todos', 'Disponível', 'Em Uso', 'Em Manutenção', 'Inativo'].map((status) => {
+                                    const params = new URLSearchParams();
+                                    if (status !== 'Todos') params.set('filter', status);
+                                    if (currentEmail !== 'Todos') params.set('email', currentEmail);
+                                    if (q) params.set('q', q);
+                                    const href = `/celulares?${params.toString()}`;
+                                    
+                                    const label = status === 'Todos' ? 'Todos' : 
+                                                 status === 'Disponível' ? 'Disponíveis' :
+                                                 status === 'Em Uso' ? 'Em Uso' :
+                                                 status === 'Em Manutenção' ? 'Manutenção' : 'Inativos';
+                                                 
+                                    const activeColors = status === 'Todos' ? 'text-slate-800' :
+                                                        status === 'Disponível' ? 'text-emerald-600' :
+                                                        status === 'Em Uso' ? 'text-purple-600' :
+                                                        status === 'Em Manutenção' ? 'text-orange-600' : 'text-slate-400';
+
+                                    return (
+                                        <a
+                                            key={status}
+                                            href={href}
+                                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === status ? `bg-white ${activeColors} shadow-sm` : 'text-slate-500 hover:text-slate-700'}`}
+                                        >
+                                            {label}
+                                        </a>
+                                    );
+                                })}
+                            </div>
                         </div>
+
+                        <EmailFilter emails={uniqueEmails} currentEmail={currentEmail} />
                     </div>
 
                     {filteredCelulares?.map((cel) => (

@@ -38,8 +38,8 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
     return (
         <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-6 items-center justify-between hover:shadow-md transition-shadow">
             <div className="flex-1 w-full flex items-center gap-4">
-                <div className={`p-3 rounded-full flex shrink-0 ${chip.status === 'Ativo' ? 'bg-emerald-100' : chip.status === 'Em Uso' ? 'bg-pink-100' : 'bg-slate-100'}`}>
-                    <SmartphoneNfc size={24} className={`${chip.status === 'Ativo' ? 'text-emerald-600' : chip.status === 'Em Uso' ? 'text-pink-600' : 'text-slate-400'}`} />
+                <div className={`p-3 rounded-full flex shrink-0 ${chip.status === 'Disponível' ? 'bg-emerald-100' : chip.status === 'Em Uso' ? 'bg-pink-100' : 'bg-slate-100'}`}>
+                    <SmartphoneNfc size={24} className={`${chip.status === 'Disponível' ? 'text-emerald-600' : chip.status === 'Em Uso' ? 'text-pink-600' : 'text-slate-400'}`} />
                 </div>
                 <div>
                     <div className="flex items-center gap-3 mb-1">
@@ -61,10 +61,10 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
                             </h3>
                         )}
                         <span className={`px-2 py-0.5 rounded-full text-xs font-semibold 
-                            ${chip.status === 'Ativo' ? 'bg-emerald-100 text-emerald-700' :
+                            ${(chip.status === 'Disponível' || chip.status === 'Ativo') ? 'bg-emerald-100 text-emerald-700' :
                                 chip.status === 'Em Uso' ? 'bg-pink-100 text-pink-700' :
                                     'bg-slate-100 text-slate-600'}`}>
-                            {chip.status}
+                            {chip.status === 'Ativo' ? 'Disponível' : chip.status}
                         </span>
                     </div>
                     {isEditing ? (
@@ -128,7 +128,7 @@ export default function ChipCard({ chip, funcionarios }: { chip: any, funcionari
                             await toggleStatusChip(chip.id, chip.status);
                         }}>
                             <button type="submit" className="w-full mt-2 text-xs text-slate-500 hover:text-slate-800 underline decoration-slate-300 underline-offset-2 py-1 transition-colors">
-                                {chip.status === 'Ativo' ? 'Cancelar / Inativar Chip' : 'Reativar Chip'}
+                                {chip.status === 'Disponível' ? 'Cancelar / Inativar Chip' : 'Reativar Chip'}
                             </button>
                         </form>
                     </div>

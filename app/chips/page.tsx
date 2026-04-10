@@ -13,7 +13,10 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
     const q = searchParams?.q?.toLowerCase() || '';
 
     const filteredChips = chips?.filter(c => {
-        const matchesStatus = currentFilter === 'Todos' ? c.status !== 'Inativo' : c.status === currentFilter;
+        const matchesStatus = currentFilter === 'Todos' 
+            ? c.status !== 'Inativo' 
+            : (currentFilter === 'Disponível' ? (c.status === 'Ativo' || c.status === 'Disponível') : c.status === currentFilter);
+        
         const matchesQuery = q ? (
             c.numero?.toLowerCase().includes(q) ||
             c.plano?.toLowerCase().includes(q)
@@ -51,7 +54,7 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-1">Status Inicial</label>
                             <select name="status" className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm text-black">
-                                <option value="Ativo">Ativo (Pronto para Uso)</option>
+                                <option value="Disponível">Disponível (Pronto para Uso)</option>
                                 <option value="Inativo">Inativo (Cancelado)</option>
                             </select>
                         </div>
@@ -76,10 +79,10 @@ export default async function ChipsPage(props: { searchParams: Promise<{ filter?
                                 Todos
                             </a>
                             <a
-                                href="/chips?filter=Ativo"
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Ativo' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                href="/chips?filter=Disponível"
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${currentFilter === 'Disponível' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                             >
-                                Ativos
+                                Disponíveis
                             </a>
                             <a
                                 href="/chips?filter=Em Uso"

@@ -1,6 +1,7 @@
 import { getDashboardStats } from '@/app/actions/dashboard';
 import { Users, Laptop, Smartphone, SmartphoneNfc, Activity, CheckCircle2, Wrench } from 'lucide-react';
 import DashboardSearch from '@/components/DashboardSearch';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,7 +9,7 @@ export default async function Home() {
   const stats = await getDashboardStats();
 
   const cards = [
-    { title: 'Funcionários', value: stats.funcionarios.total, icon: Users, color: 'bg-blue-500' },
+    { title: 'Funcionários', value: stats.funcionarios.total, icon: Users, color: 'bg-blue-500', href: '/funcionarios' },
     { 
       title: 'Notebooks', 
       value: stats.notebooks.total, 
@@ -16,7 +17,8 @@ export default async function Home() {
       sub2: `${stats.notebooks.disponivel} disponível`, 
       sub3: stats.notebooks.manutencao > 0 ? `${stats.notebooks.manutencao} em manutenção` : null,
       icon: Laptop, 
-      color: 'bg-indigo-500' 
+      color: 'bg-indigo-500',
+      href: '/notebooks'
     },
     { 
       title: 'Celulares', 
@@ -25,7 +27,8 @@ export default async function Home() {
       sub2: `${stats.celulares.disponivel} disponível`, 
       sub3: stats.celulares.manutencao > 0 ? `${stats.celulares.manutencao} em manutenção` : null,
       icon: Smartphone, 
-      color: 'bg-purple-500' 
+      color: 'bg-purple-500',
+      href: '/celulares'
     },
     { 
       title: 'Chips', 
@@ -33,7 +36,8 @@ export default async function Home() {
       sub: `${stats.chips.emUso} em uso`, 
       sub2: `${stats.chips.disponivel} disponível`, 
       icon: SmartphoneNfc, 
-      color: 'bg-pink-500' 
+      color: 'bg-pink-500',
+      href: '/chips'
     },
   ];
 
@@ -48,11 +52,15 @@ export default async function Home() {
         {cards.map((card, index) => {
           const Icon = card.icon;
           return (
-            <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col items-start hover:shadow-md transition-shadow">
-              <div className={`p-3 rounded-lg ${card.color} text-white mb-4`}>
+            <Link 
+              key={index} 
+              href={card.href}
+              className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col items-start hover:shadow-md transition-shadow group"
+            >
+              <div className={`p-3 rounded-lg ${card.color} text-white mb-4 group-hover:scale-110 transition-transform duration-200`}>
                 <Icon size={24} />
               </div>
-              <h3 className="text-slate-500 font-medium text-sm">{card.title}</h3>
+              <h3 className="text-slate-500 font-medium text-sm transition-colors group-hover:text-slate-800">{card.title}</h3>
               <p className="text-3xl font-bold text-slate-900 mt-1">{card.value}</p>
 
               <div className="flex flex-wrap gap-2 mt-2">
@@ -75,7 +83,7 @@ export default async function Home() {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

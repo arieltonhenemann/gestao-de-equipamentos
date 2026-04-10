@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { UserMinus, UserPlus, Laptop, Smartphone, SmartphoneNfc, ShieldAlert, RotateCcw, Edit2, Check, X, Printer } from 'lucide-react';
 import { inativarFuncionario, reativarFuncionario, editarFuncionarioInfo } from '@/app/actions/funcionarios';
 import TermoModal from './TermoModal';
+import Link from 'next/link';
 
 interface Funcionario {
     id: string;
@@ -123,25 +124,34 @@ export default function FuncionarioCard({ func }: { func: Funcionario }) {
                 {isExpanded && ((func.notebooks?.length ?? 0) > 0 || (func.celulares?.length ?? 0) > 0 || (func.chips?.length ?? 0) > 0) && (
                     <div className="mt-4 pt-4 border-t border-slate-100 grid gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
                         {func.notebooks?.map((note: any) => (
-                            <div key={note.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
-                                <span className="font-semibold text-slate-700 flex items-center gap-2"><Laptop size={14} className="text-indigo-500" /> Notebook</span>
-                                <span className="text-slate-600">Modelo/Marca: <span className="text-black font-medium">{note.modelo_marca}</span></span>
-                                <span className="text-slate-600">Serial: <span className="text-black font-medium">{note.serial}</span></span>
-                            </div>
+                            <Link key={note.id} href={`/notebooks?q=${encodeURIComponent(note.serial)}`} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1 hover:bg-indigo-50 hover:border-indigo-200 transition-all group cursor-pointer">
+                                <span className="font-semibold text-slate-700 flex items-center justify-between">
+                                    <span className="flex items-center gap-2"><Laptop size={14} className="text-indigo-500" /> Notebook</span>
+                                    <span className="text-[10px] text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold uppercase">Ver Detalhes →</span>
+                                </span>
+                                <span className="text-slate-600 font-normal">Modelo/Marca: <span className="text-black font-medium">{note.modelo_marca}</span></span>
+                                <span className="text-slate-600 font-normal">Serial: <span className="text-black font-medium">{note.serial}</span></span>
+                            </Link>
                         ))}
                         {func.celulares?.map((cel: any) => (
-                            <div key={cel.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
-                                <span className="font-semibold text-slate-700 flex items-center gap-2"><Smartphone size={14} className="text-purple-500" /> Celular</span>
-                                <span className="text-slate-600">Modelo/Marca: <span className="text-black font-medium">{cel.modelo_marca}</span></span>
-                                <span className="text-slate-600">Serial: <span className="text-black font-medium">{cel.serial}</span></span>
-                            </div>
+                            <Link key={cel.id} href={`/celulares?q=${encodeURIComponent(cel.serial)}`} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1 hover:bg-purple-50 hover:border-purple-200 transition-all group cursor-pointer">
+                                <span className="font-semibold text-slate-700 flex items-center justify-between">
+                                    <span className="flex items-center gap-2"><Smartphone size={14} className="text-purple-500" /> Celular</span>
+                                    <span className="text-[10px] text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold uppercase">Ver Detalhes →</span>
+                                </span>
+                                <span className="text-slate-600 font-normal">Modelo/Marca: <span className="text-black font-medium">{cel.modelo_marca}</span></span>
+                                <span className="text-slate-600 font-normal">Serial: <span className="text-black font-medium">{cel.serial}</span></span>
+                            </Link>
                         ))}
                         {func.chips?.map((chip: any) => (
-                            <div key={chip.id} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1">
-                                <span className="font-semibold text-slate-700 flex items-center gap-2"><SmartphoneNfc size={14} className="text-pink-500" /> Chip</span>
-                                <span className="text-slate-600">Número: <span className="text-black font-medium">{chip.numero}</span></span>
-                                <span className="text-slate-600">Plano: <span className="text-black font-medium">{chip.plano}</span></span>
-                            </div>
+                            <Link key={chip.id} href={`/chips?q=${encodeURIComponent(chip.numero)}`} className="text-sm bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-col gap-1 hover:bg-pink-50 hover:border-pink-200 transition-all group cursor-pointer">
+                                <span className="font-semibold text-slate-700 flex items-center justify-between">
+                                    <span className="flex items-center gap-2"><SmartphoneNfc size={14} className="text-pink-500" /> Chip</span>
+                                    <span className="text-[10px] text-pink-400 opacity-0 group-hover:opacity-100 transition-opacity font-bold uppercase">Ver Detalhes →</span>
+                                </span>
+                                <span className="text-slate-600 font-normal">Número: <span className="text-black font-medium">{chip.numero}</span></span>
+                                <span className="text-slate-600 font-normal">Plano: <span className="text-black font-medium">{chip.plano}</span></span>
+                            </Link>
                         ))}
                     </div>
                 )}
